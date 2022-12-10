@@ -2,20 +2,20 @@
 
 #### 文章标签
 
-* week：记录一周所思所想所察。
+* Week：记录一周所思所想所察。
 
-* read-note：读某本书的笔记。
-* tech-note：学习某技术的笔记。
-* ...
+* Read-Note：读某本书的笔记。
+* Tech-Note：学习某技术的笔记。
+* Life：人生感悟。
 
 #### 注意事项
 
-* 每篇文章必须在开头使用`---`来创建开头，以便给网页html添加信息，结构如下：
+* 每篇文章必须在开头使用`---`来创建开头，**一定不要复制粘贴，需要手敲。**以便给网页html添加信息，结构如下：
 
 ```markdown
 layout: post // 网页层次
-title: 我人生的前28年 // 文章标题
-categories: [Life] // 文章标签
+title: 文章标题 // 文章标题
+categories: [Life] // 文章分类
 author: hhm // 作者
 ```
 
@@ -26,14 +26,13 @@ author: hhm // 作者
 #### 网站结构
 
 * 根目录中`index.html`生成blog首页。
-* `_include/footer.html`生成侧边栏。
-* `_include/svg-icons.html`生成社交头像链接。
+
 
 #### 致谢
 
-* 感谢Jekyll主题[LOFFER](https://fromendworld.github.io/LOFFER/)模提供了原始主题模板。
+* 感谢海牛懒猫大神的[模板](https://github.com/manateelazycat/manateelazycat.github.io)
 
-* 感谢[这篇文章]( https://lemonchann.github.io/create_blog_with_github_pages/ )详细指导搭建步骤。
+* 感谢[这篇文章]( https://bingqiangzhou.github.io/2019/08/13/DailySummary-HowToSettingGithubIoWithHexoAndNextTheme.html#%E6%90%AD%E5%BB%BAhexo%E7%8E%AF%E5%A2%83)详细指导搭建步骤，也让我明白了许多原理。
 
 #### 联系
 
