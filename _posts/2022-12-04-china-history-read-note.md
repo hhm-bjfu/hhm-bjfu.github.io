@@ -1,6 +1,6 @@
 ---
 layout:	post
-title:《中国通史》（傅乐成）阅读笔记
+title: 我人生的前29年
 categories:[Note]
 ---
 
