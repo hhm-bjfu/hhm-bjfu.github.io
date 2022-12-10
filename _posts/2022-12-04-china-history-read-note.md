@@ -1,7 +1,7 @@
 ---
 layout:	post
 title: 我人生的前29年
-categories:[Note]
+categories:[Life]
 ---
 
 ## test

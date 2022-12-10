@@ -1,6 +1,6 @@
 ---
 layout: post
-title: 《数据库系统概念》（第6版）阅读笔记
+title:《数据库系统概念》（第6版）阅读笔记
 categories: [Life]
 ---
 
