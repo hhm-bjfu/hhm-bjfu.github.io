@@ -14,7 +14,10 @@ body {
 
 .content-area {
     box-sizing: border-box;
-    background-color: #FFF;
+    background: linear-gradient(rgba(255,255,255,.8), rgba(255,255,255,1)), url("https://raw.githubusercontent.com/hhm-bjfu/hhm-bjfu.github.io/main/pics/background/home-dao.jpg");
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
     border-radius: 5px;
     width: 60%;
     margin: 20px;
