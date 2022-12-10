@@ -13,12 +13,10 @@
 * 每篇文章必须在开头使用`---`来创建开头，以便给网页html添加信息，结构如下：
 
 ```markdown
-layout: post // 表示网页的层次
-title: "文章标题" // 文章的标题
-date:   2019-11-22 // 文章时间
-tags: [test章标签
-comments: true // 是否允许评论
-author: lemonchann // 作者
+layout: post // 网页层次
+title: 我人生的前28年 // 文章标题
+categories: [Life] // 文章标签
+author: hhm // 作者
 ```
 
 * github中`README.md`关联图片的图片地址规范：`https://github.com/用户名/repository仓库名/raw/分支名master/图片文件夹名称/***.png or***.jpg`
@@ -41,6 +39,7 @@ author: lemonchann // 作者
 
 欢迎加我好友
 
-![个人微信号](./README.assets/weixin-1670135163627-1.jpg)
+![个人微信号](https://raw.githubusercontent.com/hhm-bjfu/hhm-bjfu.github.io/main/pics/aboutMe/weixin.jpg)
 
 ****
+
