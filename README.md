@@ -19,9 +19,14 @@ categories: [Life] // 文章分类
 author: hhm // 作者
 ```
 
-* github中`README.md`关联图片的图片地址规范：`https://github.com/用户名/repository仓库名/raw/分支名master/图片文件夹名称/***.png or***.jpg`
+* github上传图片的方法：
 
-* github中使用的图片都需要PicGo工具上传到github中，不能直接`git push`，否则无法预览。
+1. Create a new issue on GitHub.
+2. Drag an image into the comment field.
+3. Wait for the upload process to finish.
+4. Copy the URL and use it in your Markdown files on GitHub.
+
+![](https://user-images.githubusercontent.com/499192/57450172-1a955f80-725e-11e9-9fed-267179bdab15.gif)
 
 #### 网站结构
 
