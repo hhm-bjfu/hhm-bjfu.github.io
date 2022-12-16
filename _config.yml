@@ -4,6 +4,9 @@ markdown: kramdown
 kramdown:
   input: GFM
   syntax_highlighter: rouge
+  
+# Automatically excerpt description in homepage as preamble text.
+excerpt_description: true
 
 webrick:
   headers:
