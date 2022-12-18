@@ -13,7 +13,7 @@ Select Operating System:`Platform Independent`
 
 Click `No thanks, just start my download.`
 
-![image-20221217183647068](/home/hhm/.config/Typora/typora-user-images/image-20221217183647068.png)
+![image](https://user-images.githubusercontent.com/88172940/208276041-3e65da44-9c11-4efe-b42b-f2a6a0582b02.png)
 
 Extract files and place files in a memorable location.
 
@@ -27,7 +27,7 @@ Extract files and place files in a memorable location.
 
 3、Select lib -> right click -> Opin in -> files -> Import JDBC
 
-![image-20221217185821838](/home/hhm/.config/Typora/typora-user-images/image-20221217185821838.png)
+![image](https://user-images.githubusercontent.com/88172940/208276060-60eeac66-3c5a-4cc7-9d40-48395ba6c2b3.png)
 
 ## Add it as a module
 
