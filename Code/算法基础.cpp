@@ -1,3 +1,4 @@
+// 未完成，先睡觉
 #include <iostream>
 #include <algorithm>
 #include <cstring>
@@ -55,7 +56,7 @@ bool has_equal_sign(string str) { // 判断有无等号
     return false;
 }
 
-vector<string> getNode(string input_str) {  // 将结点提取出来
+vector<string> getNode(string input_str) {  // 将结点提取出来，放到vector中
     vector<string> input;
     for (int i = 1; i < input_str.size() - 1;) {
         if (input_str[i] == ' ') i ++;      // 空格则跳过
@@ -64,7 +65,9 @@ vector<string> getNode(string input_str) {  // 将结点提取出来
             for (; j < input_str.size() - 1; j ++)
                 if (input_str[j] == '}')
                     break;
-            string dataTmp = input_str.substr(i + 1, j - i - 1);
+            int start = i + 1;
+            if (input_str[i + 1] == '\\') start ++;
+            string dataTmp = input_str.substr(start, j - start);
             input.push_back(dataTmp);
             i += (j - i + 1);
         }else if (input_str[i] == '\\') {   // 取 \ 开头的字符串
@@ -149,7 +152,6 @@ int main () {
         goto start;
     }
 
-    /* 将每一个节点提取出来，放到vector中 */
     if (has_equal_sign(input_str)) { // 有等号，需要分成两棵树
         int index = -1;
         for (int i = 0; i < input_str.size(); i ++)
@@ -163,9 +165,13 @@ int main () {
         /* 建树 输出树 */
         node* root1 = createTree(data1, 0, data1.size() - 1);
         addIndex(root1);
+        cout << "等式左边树结构如下：\n";
         printTree(root1);
+        cout << endl;
+
         node* root2 = createTree(data2, 0, data2.size() - 1);
         addIndex(root2);
+        cout << "等式右边树结构如下：\n";
         printTree(root2);
     }else {
         vector<string> data = getNode(input_str);
@@ -175,9 +181,26 @@ int main () {
         addIndex(root);
         printTree(root);
     }
-    
+
     return 0;
 }
+
+// 测试样例：${\alpha } + {\beta} \times {\gamma} = {\lambda} + {\pi} \times {\tau}$
+//Please input your Latex string:${\alpha } + {\beta} \times {\gamma} = {\lambda} + {\pi} \times {\tau}$
+//        等式左边树结构如下：
+//        索引：1	值：+
+//        索引：2	值：alpha
+//        索引：3	值：times
+//        索引：4	值：beta
+//        索引：5	值：gamma
+//
+//        等式右边树结构如下：
+//        索引：1	值：+
+//        索引：2	值：lambda
+//        索引：3	值：times
+//        索引：4	值：pi
+//        索引：5	值：tau
+
 
 // 测试样例：${a} - {b} + {c} \times {d} + {c} - {a} \times {b} + {c} \times {d}$
 //Please input your Latex string:${a} - {b} + {c} \times {d} + {c} - {a} \times {b} + {c} \times {d}$
@@ -199,4 +222,24 @@ int main () {
 //        索引：16	值：c
 //        索引：17	值：d
 
-// 测试样例：
+// 测试样例：${a} - {b} + {c} \times {d} + {c} = {a} \times {b} + {c} \times {d}$
+//Please input your Latex string:${a} - {b} + {c} \times {d} + {c} = {a} \times {b} + {c} \times {d}$
+//        等式左边树结构如下：
+//        索引：1	值：+
+//        索引：2	值：+
+//        索引：3	值：c
+//        索引：4	值：-
+//        索引：5	值：times
+//        索引：6	值：-
+//        索引：7	值：b
+//        索引：8	值：c
+//        索引：9	值：d
+//
+//        等式右边树结构如下：
+//        索引：1	值：+
+//        索引：2	值：times
+//        索引：3	值：times
+//        索引：4	值：a
+//        索引：5	值：b
+//        索引：6	值：c
+//        索引：7	值：d
