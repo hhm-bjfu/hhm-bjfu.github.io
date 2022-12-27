@@ -32,9 +32,57 @@ node* newNode (string str) {
 }
 
 bool is_Latex(string str) {
-    if (str[0] != '$' || str[str.size() - 1] != '$')
+    if (str[0] != '$' || str[str.size() - 1] != '$') {  // 开头结尾并非 '$'
+        cout << "输入Latex公式开头或结尾缺少'$'" << endl;
         return false;
+    }
+
+    // 判断 { } 是否配对
+    int num = 0;
+    for (auto ch : str) {
+        if (ch == '{') num ++;
+        if (ch == '}') num --;
+    }
+    if (num) return false;
+
     return true;
+}
+
+bool has_equal_sign(string str) { // 判断有无等号
+    for (auto ch : str)
+        if (ch == '=')
+            return true;
+    return false;
+}
+
+vector<string> getNode(string input_str) {  // 将结点提取出来
+    vector<string> input;
+    for (int i = 1; i < input_str.size() - 1;) {
+        if (input_str[i] == ' ') i ++;      // 空格则跳过
+        else if (input_str[i] == '{') {     // 取 {} 包围的字符串
+            int j = i;
+            for (; j < input_str.size() - 1; j ++)
+                if (input_str[j] == '}')
+                    break;
+            string dataTmp = input_str.substr(i + 1, j - i - 1);
+            input.push_back(dataTmp);
+            i += (j - i + 1);
+        }else if (input_str[i] == '\\') {   // 取 \ 开头的字符串
+            int j = i;
+            for (; j < input_str.size() - 1; j ++)
+                if (input_str[j] == ' ' || input_str[j] == '{')
+                    break;
+            string opTmp = input_str.substr(i + 1, j - i - 1);
+            input.push_back(opTmp);
+            i += (j - i);
+        }else if (input_str[i] == '+'|| input_str[i] == '-') {  // 遇见 + 或者 -
+            string opTmp = ""; opTmp.push_back(input_str[i]);
+            input.push_back(opTmp);
+            i ++;
+        }else i ++;
+    }
+
+    return input;
 }
 
 node* createTree(vector<string> data, int left, int right) {
@@ -102,37 +150,32 @@ int main () {
     }
 
     /* 将每一个节点提取出来，放到vector中 */
-    vector<string> input;
-    for (int i = 1; i < input_str.size() - 1;) {
-        if (input_str[i] == ' ') i ++;      // 空格则跳过
-        else if (input_str[i] == '{') {     // 取 {} 包围的字符串
-            int j = i;
-            for (; j < input_str.size() - 1; j ++)
-                if (input_str[j] == '}')
-                    break;
-            string dataTmp = input_str.substr(i + 1, j - i - 1);
-            input.push_back(dataTmp);
-            i += (j - i + 1);
-        }else if (input_str[i] == '\\') {   // 取 \ 开头的字符串
-            int j = i;
-            for (; j < input_str.size() - 1; j ++)
-                if (input_str[j] == ' ' || input_str[j] == '{')
-                    break;
-            string opTmp = input_str.substr(i + 1, j - i - 1);
-            input.push_back(opTmp);
-            i += (j - i);
-        }else if (input_str[i] == '+'|| input_str[i] == '-') {  // 遇见 + 或者 -
-            string opTmp = ""; opTmp.push_back(input_str[i]);
-            input.push_back(opTmp);
-            i ++;
-        }else i ++;
+    if (has_equal_sign(input_str)) { // 有等号，需要分成两棵树
+        int index = -1;
+        for (int i = 0; i < input_str.size(); i ++)
+            if (input_str[i] == '=')
+                index = i;
+        string input_str1 = input_str.substr(1, index - 1);
+        string input_str2 = input_str.substr(index + 1, input_str.size() - index - 2);
+
+        vector<string> data1 = getNode(input_str1);
+        vector<string> data2 = getNode(input_str2);
+        /* 建树 输出树 */
+        node* root1 = createTree(data1, 0, data1.size() - 1);
+        addIndex(root1);
+        printTree(root1);
+        node* root2 = createTree(data2, 0, data2.size() - 1);
+        addIndex(root2);
+        printTree(root2);
+    }else {
+        vector<string> data = getNode(input_str);
+
+        /* 建树 输出树 */
+        node* root = createTree(data, 0, data.size() - 1);
+        addIndex(root);
+        printTree(root);
     }
-
-    /* 建树 输出树 */
-    node * root = createTree(input, 0, input.size() - 1);
-    addIndex(root);
-    printTree(root);
-
+    
     return 0;
 }
 
@@ -155,3 +198,5 @@ int main () {
 //        索引：15	值：b
 //        索引：16	值：c
 //        索引：17	值：d
+
+// 测试样例：
