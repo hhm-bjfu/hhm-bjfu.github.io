@@ -48,8 +48,6 @@ node* createTree(vector<string> data, int left, int right) {
         if (getPriority(data[i]) < minn)
             minn = getPriority(data[i]);
 
-    cout << minn << endl;
-
     // 三个节点以上建树
     node* root = NULL;
     int index = 0;
@@ -135,6 +133,25 @@ int main () {
     addIndex(root);
     printTree(root);
 
-
     return 0;
 }
+
+// 测试样例：${a} - {b} + {c} \times {d} + {c} - {a} \times {b} + {c} \times {d}$
+//Please input your Latex string:${a} - {b} + {c} \times {d} + {c} - {a} \times {b} + {c} \times {d}$
+//        索引：1	值：+
+//        索引：2	值：-
+//        索引：3	值：times
+//        索引：4	值：+
+//        索引：5	值：times
+//        索引：6	值：c
+//        索引：7	值：d
+//        索引：8	值：+
+//        索引：9	值：c
+//        索引：10	值：a
+//        索引：11	值：b
+//        索引：12	值：-
+//        索引：13	值：times
+//        索引：14	值：a
+//        索引：15	值：b
+//        索引：16	值：c
+//        索引：17	值：d
