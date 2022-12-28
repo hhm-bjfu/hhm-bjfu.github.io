@@ -1,4 +1,3 @@
-// 未完成，先睡觉
 #include <iostream>
 #include <algorithm>
 #include <cstring>
@@ -10,8 +9,8 @@ using namespace std;
 
 int getPriority (string str) {
     if (str == "+" || str == "-") return 1;
-    if (str == "times") return 2;
-    if (str == "*" || str == "/") return 2;
+    if (str == "times" || str == "div" || str == "^" ||
+        str == "land" || str == "lor") return 2;
     return 10;
 }
 
@@ -56,6 +55,21 @@ bool has_equal_sign(string str) { // 判断有无等号
     return false;
 }
 
+int has_brace_sign(string str) { // 字符串中有几个{，以此确定节点是否为前缀表达式
+    int num = 0;
+    for (auto ch : str)
+        if (ch == '{')
+            num ++;
+    return num;
+}
+
+bool has_backet_sign(string str) { // 判断有无(
+    for (auto ch : str)
+        if (ch == '(')
+            return true;
+    return false;
+}
+
 vector<string> getNode(string input_str) {  // 将结点提取出来，放到vector中
     vector<string> input;
     for (int i = 1; i < input_str.size() - 1;) {
@@ -76,12 +90,28 @@ vector<string> getNode(string input_str) {  // 将结点提取出来，放到vec
                 if (input_str[j] == ' ' || input_str[j] == '{')
                     break;
             string opTmp = input_str.substr(i + 1, j - i - 1);
+            if (opTmp == "frac") { // frac为前缀，需要特殊判断
+                while (input_str[j] != '}') j ++; j ++;
+                while (input_str[j] != '}') j ++;
+                opTmp = input_str.substr(i + 1, j - i);
+            }else if (opTmp == "sqrt" || opTmp == "neg" || opTmp == "sin" ||
+                      opTmp == "cos" || opTmp == "tan") {
+                while (input_str[j] != '}') j ++;
+                opTmp = input_str.substr(i + 1, j - i);
+            }
             input.push_back(opTmp);
-            i += (j - i);
-        }else if (input_str[i] == '+'|| input_str[i] == '-') {  // 遇见 + 或者 -
+            i += (j - i + 1);
+        }else if (input_str[i] == '+'|| input_str[i] == '-' || input_str[i] == '^') {  // 遇见 + 或者 - 或者 ^
             string opTmp = ""; opTmp.push_back(input_str[i]);
             input.push_back(opTmp);
             i ++;
+        }else if (input_str[i] == '(') {
+            int j = i;
+            while (input_str[j] != ')') j ++;
+            string opTmp = input_str.substr(i, j - i + 1);
+            cout << "opTmp:" << opTmp << endl;
+            input.push_back(opTmp);
+            i += (j - i + 1);
         }else i ++;
     }
 
@@ -89,10 +119,50 @@ vector<string> getNode(string input_str) {  // 将结点提取出来，放到vec
 }
 
 node* createTree(vector<string> data, int left, int right) {
-    if (left >= right)  // 只有一个节点，直接建树
-        return newNode(data[left]);
+    if (left >= right) { // 如果1个节点
+        cout << "此时节点为：" << data[left] << endl;
+        if (has_backet_sign(data[left])) {
+            string str = data[left];
+            str = str.substr(1, str.size() - 2);
+            cout << str << endl;
+            vector<string> input = getNode(str);
+            return createTree(input, 0, input.size() - 1);
+        }
+        else if (has_brace_sign(data[left]) == 2) {
+            node* preRoot = NULL;
+
+            string str = data[left];
+            int index1 = 0, index2 = 0; // 记录 { 的位置
+            while (str[index1] != '{') index1 ++;
+            index2 = index1 + 1;
+            while (str[index2] != '{') index2 ++;
+            string str1 = str.substr(0, index1);
+            string str2 = str.substr(index1 + 1, 1);
+            string str3 = str.substr(index2 + 1, 1);
+            preRoot = newNode(str1);
+            preRoot->lchild = newNode(str2);
+            preRoot->rchild = newNode(str3);
+            return preRoot;
+        }else if (has_brace_sign(data[left]) == 1) {
+            node* preRoot = NULL;
+
+            string str = data[left];
+            int index = 0;
+            while (str[index] != '{') index ++;
+            string str1 = str.substr(0, index);
+            string str2 = str.substr(index + 1, 1);
+            preRoot = newNode(str1);
+            preRoot -> lchild = newNode(str2);
+            preRoot -> rchild = NULL;
+            return preRoot;
+        }
+
+        // 如果节点内部不是前缀表达式
+        else return newNode(data[left]);
+    }
 
     // 合法式子中不会有两个节点建树的情况
+
 
     int minn = 100;
     for (int i = right; i >= left; i --)
@@ -175,6 +245,8 @@ int main () {
         printTree(root2);
     }else {
         vector<string> data = getNode(input_str);
+//        for (auto op : data) cout << op << " ";
+//        cout << endl;
 
         /* 建树 输出树 */
         node* root = createTree(data, 0, data.size() - 1);
@@ -185,7 +257,7 @@ int main () {
     return 0;
 }
 
-// 测试样例：${\alpha } + {\beta} \times {\gamma} = {\lambda} + {\pi} \times {\tau}$
+// 测试样例1：${\alpha } + {\beta} \times {\gamma} = {\lambda} + {\pi} \times {\tau}$
 //Please input your Latex string:${\alpha } + {\beta} \times {\gamma} = {\lambda} + {\pi} \times {\tau}$
 //        等式左边树结构如下：
 //        索引：1	值：+
@@ -200,6 +272,29 @@ int main () {
 //        索引：3	值：times
 //        索引：4	值：pi
 //        索引：5	值：tau
+
+// 测试样例2：${a} + \frac{a}{b} - {c}$
+//Please input your Latex string:${a} + \frac{a}{b} - {c}$
+//        索引：1	值：-
+//        索引：2	值：+
+//        索引：3	值：c
+//        索引：4	值：a
+//        索引：5	值：frac
+//        索引：6	值：a
+//        索引：7	值：b
+
+// 测试样例3：$\sqrt{a} + \sqrt{b} - {c} \times {a}$
+
+// 测试样例：${a} ^ {2} + {b} ^ {2}$
+//Please input your Latex string:${a} ^ {2} + {b} ^ {2}$
+//        索引：1	值：+
+//        索引：2	值：^
+//        索引：3	值：^
+//        索引：4	值：a
+//        索引：5	值：2
+//        索引：6	值：b
+//        索引：7	值：2
+
 
 
 // 测试样例：${a} - {b} + {c} \times {d} + {c} - {a} \times {b} + {c} \times {d}$
@@ -222,6 +317,14 @@ int main () {
 //        索引：16	值：c
 //        索引：17	值：d
 
+// 测试样例：${a} \div {c} + {b}$
+//Please input your Latex string:${a} \div {c} + {b}$
+//        索引：1	值：+
+//        索引：2	值：div
+//        索引：3	值：b
+//        索引：4	值：a
+//        索引：5	值：c
+
 // 测试样例：${a} - {b} + {c} \times {d} + {c} = {a} \times {b} + {c} \times {d}$
 //Please input your Latex string:${a} - {b} + {c} \times {d} + {c} = {a} \times {b} + {c} \times {d}$
 //        等式左边树结构如下：
@@ -243,3 +346,13 @@ int main () {
 //        索引：5	值：b
 //        索引：6	值：c
 //        索引：7	值：d
+
+// 测试样例：${A} \land {B} \lor {A} \land {C}$
+//Please input your Latex string:${A} \land {B} \lor {A} \land {C}$
+//        索引：1	值：land
+//        索引：2	值：lor
+//        索引：3	值：C
+//        索引：4	值：land
+//        索引：5	值：A
+//        索引：6	值：A
+//        索引：7	值：B
