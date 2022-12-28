@@ -10,7 +10,8 @@ using namespace std;
 int getPriority (string str) {
     if (str == "+" || str == "-") return 1;
     if (str == "times" || str == "div" || str == "^" ||
-        str == "land" || str == "lor") return 2;
+        str == "land" || str == "lor" || str == "lxor" ||
+        str == "rightarrow" || str == "iff") return 2;
     return 10;
 }
 
@@ -43,7 +44,10 @@ bool is_Latex(string str) {
         if (ch == '{') num ++;
         if (ch == '}') num --;
     }
-    if (num) return false;
+    if (num) {
+        cout << "大括号匹配错误！" << endl;
+        return false;
+    }
 
     return true;
 }
@@ -72,7 +76,7 @@ bool has_backet_sign(string str) { // 判断有无(
 
 vector<string> getNode(string input_str) {  // 将结点提取出来，放到vector中
     vector<string> input;
-    for (int i = 1; i < input_str.size() - 1;) {
+    for (int i = 0; i < input_str.size();) {
         if (input_str[i] == ' ') i ++;      // 空格则跳过
         else if (input_str[i] == '{') {     // 取 {} 包围的字符串
             int j = i;
@@ -109,7 +113,6 @@ vector<string> getNode(string input_str) {  // 将结点提取出来，放到vec
             int j = i;
             while (input_str[j] != ')') j ++;
             string opTmp = input_str.substr(i, j - i + 1);
-            cout << "opTmp:" << opTmp << endl;
             input.push_back(opTmp);
             i += (j - i + 1);
         }else i ++;
@@ -120,7 +123,6 @@ vector<string> getNode(string input_str) {  // 将结点提取出来，放到vec
 
 node* createTree(vector<string> data, int left, int right) {
     if (left >= right) { // 如果1个节点
-        cout << "此时节点为：" << data[left] << endl;
         if (has_backet_sign(data[left])) {
             string str = data[left];
             str = str.substr(1, str.size() - 2);
@@ -245,8 +247,6 @@ int main () {
         printTree(root2);
     }else {
         vector<string> data = getNode(input_str);
-//        for (auto op : data) cout << op << " ";
-//        cout << endl;
 
         /* 建树 输出树 */
         node* root = createTree(data, 0, data.size() - 1);
@@ -257,8 +257,24 @@ int main () {
     return 0;
 }
 
-// 测试样例1：${\alpha } + {\beta} \times {\gamma} = {\lambda} + {\pi} \times {\tau}$
-//Please input your Latex string:${\alpha } + {\beta} \times {\gamma} = {\lambda} + {\pi} \times {\tau}$
+// 测试样例1：${a} + {b} \times {c} = {c} - {e} \div {f}$
+//Please input your Latex string:${a} + {b} \times {c} = {c} - {e} \div {f}$
+//        等式左边树结构如下：
+//        索引：1	值：+
+//        索引：2	值：a
+//        索引：3	值：times
+//        索引：4	值：b
+//        索引：5	值：c
+//
+//        等式右边树结构如下：
+//        索引：1	值：-
+//        索引：2	值：c
+//        索引：3	值：div
+//        索引：4	值：e
+//        索引：5	值：f
+
+// 测试样例2：${\alpha} + {\beta} \times {\gamma} = {\lambda} + {\pi} \times {\tau}$
+//Please input your Latex string:${\alpha} + {\beta} \times {\gamma} = {\lambda} + {\pi} \times {\tau}$
 //        等式左边树结构如下：
 //        索引：1	值：+
 //        索引：2	值：alpha
@@ -273,86 +289,76 @@ int main () {
 //        索引：4	值：pi
 //        索引：5	值：tau
 
-// 测试样例2：${a} + \frac{a}{b} - {c}$
-//Please input your Latex string:${a} + \frac{a}{b} - {c}$
-//        索引：1	值：-
-//        索引：2	值：+
-//        索引：3	值：c
-//        索引：4	值：a
-//        索引：5	值：frac
-//        索引：6	值：a
-//        索引：7	值：b
-
-// 测试样例3：$\sqrt{a} + \sqrt{b} - {c} \times {a}$
-
-// 测试样例：${a} ^ {2} + {b} ^ {2}$
-//Please input your Latex string:${a} ^ {2} + {b} ^ {2}$
-//        索引：1	值：+
-//        索引：2	值：^
-//        索引：3	值：^
-//        索引：4	值：a
-//        索引：5	值：2
-//        索引：6	值：b
-//        索引：7	值：2
-
-
-
-// 测试样例：${a} - {b} + {c} \times {d} + {c} - {a} \times {b} + {c} \times {d}$
-//Please input your Latex string:${a} - {b} + {c} \times {d} + {c} - {a} \times {b} + {c} \times {d}$
-//        索引：1	值：+
-//        索引：2	值：-
-//        索引：3	值：times
-//        索引：4	值：+
-//        索引：5	值：times
-//        索引：6	值：c
-//        索引：7	值：d
-//        索引：8	值：+
-//        索引：9	值：c
-//        索引：10	值：a
-//        索引：11	值：b
-//        索引：12	值：-
-//        索引：13	值：times
-//        索引：14	值：a
-//        索引：15	值：b
-//        索引：16	值：c
-//        索引：17	值：d
-
-// 测试样例：${a} \div {c} + {b}$
-//Please input your Latex string:${a} \div {c} + {b}$
-//        索引：1	值：+
-//        索引：2	值：div
-//        索引：3	值：b
-//        索引：4	值：a
-//        索引：5	值：c
-
-// 测试样例：${a} - {b} + {c} \times {d} + {c} = {a} \times {b} + {c} \times {d}$
-//Please input your Latex string:${a} - {b} + {c} \times {d} + {c} = {a} \times {b} + {c} \times {d}$
+// 测试样例3：${a} ^ {b} + {c} \land {d} = {p} \lor {q}$
+//Please input your Latex string:${a} ^ {b} + {c} \land {d} = {p} \lor {q}$
 //        等式左边树结构如下：
 //        索引：1	值：+
-//        索引：2	值：+
-//        索引：3	值：c
-//        索引：4	值：-
-//        索引：5	值：times
-//        索引：6	值：-
-//        索引：7	值：b
-//        索引：8	值：c
-//        索引：9	值：d
-//
-//        等式右边树结构如下：
-//        索引：1	值：+
-//        索引：2	值：times
-//        索引：3	值：times
+//        索引：2	值：^
+//        索引：3	值：land
 //        索引：4	值：a
 //        索引：5	值：b
 //        索引：6	值：c
 //        索引：7	值：d
+//
+//        等式右边树结构如下：
+//        索引：1	值：lor
+//        索引：2	值：p
+//        索引：3	值：q
 
-// 测试样例：${A} \land {B} \lor {A} \land {C}$
-//Please input your Latex string:${A} \land {B} \lor {A} \land {C}$
-//        索引：1	值：land
-//        索引：2	值：lor
-//        索引：3	值：C
-//        索引：4	值：land
-//        索引：5	值：A
-//        索引：6	值：A
-//        索引：7	值：B
+// 测试样例4：${p} \rightarrow {q} + {p} \iff {q}$
+//Please input your Latex string:${p} \rightarrow {q} + {p} \iff {q}$
+//        索引：1	值：+
+//        索引：2	值：rightarrow
+//        索引：3	值：iff
+//        索引：4	值：p
+//        索引：5	值：q
+//        索引：6	值：p
+//        索引：7	值：q
+
+
+// 测试样例5：$\frac{3}{4} + \frac{5}{4} = {1} + {1}$
+//Please input your Latex string:$\frac{3}{4} + \frac{5}{4} = {1} + {1}$
+//        等式左边树结构如下：
+//        索引：1	值：+
+//        索引：2	值：frac
+//        索引：3	值：frac
+//        索引：4	值：3
+//        索引：5	值：4
+//        索引：6	值：5
+//        索引：7	值：4
+//
+//        等式右边树结构如下：
+//        索引：1	值：+
+//        索引：2	值：1
+//        索引：3	值：1
+
+// 测试样例6：$\sqrt{a} + {-2} = \sin{b} + \cos{d}$
+//Please input your Latex string:$\sqrt{a} + {-2} = \sin{b} + \cos{d}$
+//        等式左边树结构如下：
+//        索引：1	值：+
+//        索引：2	值：sqrt
+//        索引：3	值：-2
+//        索引：4	值：a
+//
+//        等式右边树结构如下：
+//        索引：1	值：+
+//        索引：2	值：sin
+//        索引：3	值：cos
+//        索引：4	值：b
+//        索引：5	值：d
+
+// 测试样例7：${a} + {b} \times ({c} + {d}) - {e} \times {f}$
+//Please input your Latex string:${a} + {b} \times ({c} + {d}) - {e} \times {f}$
+//        {c} + {d}
+//        索引：1	值：-
+//        索引：2	值：+
+//        索引：3	值：times
+//        索引：4	值：a
+//        索引：5	值：times
+//        索引：6	值：e
+//        索引：7	值：f
+//        索引：8	值：b
+//        索引：9	值：+
+//        索引：10	值：c
+//        索引：11	值：d
+
