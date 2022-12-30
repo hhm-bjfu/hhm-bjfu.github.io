@@ -7,7 +7,7 @@
 
 using namespace std;
 
-int getPriority (string str) {
+int getPriority (string str) { // 获取操作符的优先级
     if (str == "+" || str == "-") return 1;
     if (str == "times" || str == "div" || str == "^" ||
         str == "land" || str == "lor" || str == "lxor" ||
@@ -15,7 +15,7 @@ int getPriority (string str) {
     return 10;
 }
 
-struct node {
+struct node { // 结构体定义
     int index;
     int priority;
     string text;
@@ -24,7 +24,7 @@ struct node {
     node* rchild;
 };
 
-node* newNode (string str) {
+node* newNode (string str) { // 新建结点  
     node* Node = new node;
     Node->text = str;
     Node->priority = getPriority(str);
@@ -32,7 +32,7 @@ node* newNode (string str) {
     return Node;
 }
 
-bool is_Latex(string str) {
+bool is_Latex(string str) { // 判断字符串是否符合Latex语法
     if (str[0] != '$' || str[str.size() - 1] != '$') {  // 开头结尾并非 '$'
         cout << "输入Latex公式开头或结尾缺少'$'" << endl;
         return false;
@@ -52,7 +52,7 @@ bool is_Latex(string str) {
     return true;
 }
 
-bool has_equal_sign(string str) { // 判断有无等号
+bool has_equal_sign(string str) { // 判断某个字符串有无等号
     for (auto ch : str)
         if (ch == '=')
             return true;
@@ -67,7 +67,7 @@ int has_brace_sign(string str) { // 字符串中有几个{，以此确定节点�
     return num;
 }
 
-bool has_backet_sign(string str) { // 判断有无(
+bool has_backet_sign(string str) { // 判断有无
     for (auto ch : str)
         if (ch == '(')
             return true;
@@ -186,8 +186,8 @@ node* createTree(vector<string> data, int left, int right) {
     return root;
 }
 
-void addIndex(node* &root) {
-    queue<node*> q;
+void addIndex(node* &root) { 
+    queue<node*> q;        
     q.push(root);
     int idx = 0;
     while (!q.empty()) {
@@ -199,7 +199,7 @@ void addIndex(node* &root) {
     }
 }
 
-void printTree(node* root) {
+void printTree(node* root) { // BFS层序遍历树
     queue<node*> q;
     q.push(root);
     while (!q.empty()) {
